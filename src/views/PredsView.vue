@@ -80,7 +80,11 @@ function validAndSend() {
                 </CAlert>
             </div>
         </div>
-        <div>
+        <div class="box border_back">
+            <span class="text">
+                <p style="font: 2em sans-serif;">Наиболее интересные места для посещения
+                </p>
+            </span>
             <ResultItems />
         </div>
     </div>
@@ -92,6 +96,11 @@ function validAndSend() {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.border_back {
+    background-color: rgba(113, 163, 255, 0.13);
+    border-radius: 12px;
 }
 
 .center {

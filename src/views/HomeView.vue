@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  Home
+  Что-то общее обо всём
 </template>
