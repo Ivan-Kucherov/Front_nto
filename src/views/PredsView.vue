@@ -1,12 +1,16 @@
 <script setup>
+
 import { storeToRefs } from "pinia";
 import { ref, toRaw } from "vue"
 import UploadFile from "../components/UploadFile.vue"
 import { useImagesStore } from "@/stores/ImagesStore";
+import axios from 'axios'
+
 const store = useImagesStore()
 const { images } = storeToRefs(store)
 let arrayImages = [];
 const error = ref(false)
+let error_text = "Отсутствуют фотографии"
 function validAndSend() {
     let temp = [];
     arrayImages = [];
@@ -14,19 +18,39 @@ function validAndSend() {
         error.value = true
     }
     else {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < images.value.length; i++) {
             temp.push(images.value[i].id)
         }
         console.log(temp)
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < images.value.length; i++) {
             let id = temp.indexOf(i)
             if (id == -1) {
                 error.value = true
                 break;
             }
-            arrayImages.push([temp.indexOf(i)])
+            arrayImages.push([images.value[temp.indexOf(i)].image])
         }
-        console.log(arrayImages)
+        if (images.value.length != arrayImages.length) {
+            error.value = true
+            error_text = "Неправельно указан порядок посещения"
+
+        }
+        else {
+            error.value = false
+            console.log(arrayImages)
+        }
+    }
+    if (!error.value) {
+        axios({
+            method: 'post',
+            url: '/items',
+            data: { images: arrayImages },
+        }).then(function (response) {
+            console.log(response);
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 }
 </script>
@@ -48,7 +72,7 @@ function validAndSend() {
             </div>
             <div v-if="error">
                 <CAlert color="warning">
-                    Мало фотографий или неверно указан порядок посещения
+                    {{ error_text }}
                 </CAlert>
             </div>
         </div>
