@@ -18,4 +18,10 @@ import HeaderItem from './components/HeaderItem.vue'
   display: block;
   margin: 0 auto 2rem;
 }
+
+body {
+  display: flex;
+  place-items: center;
+  background-color: rgba(109, 255, 141, 0.425);
+}
 </style>
