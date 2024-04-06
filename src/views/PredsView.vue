@@ -3,6 +3,7 @@
 import { storeToRefs } from "pinia";
 import { ref, toRaw } from "vue"
 import UploadFile from "../components/UploadFile.vue"
+import ResultItems from "../components/ResultsItem.vue"
 import { useImagesStore } from "@/stores/ImagesStore";
 import axios from 'axios'
 
@@ -14,6 +15,7 @@ let error_text = "Отсутствуют фотографии"
 function validAndSend() {
     let temp = [];
     arrayImages = [];
+    error.value = false;
     if (images.value.length == 0) {
         error.value = true
     }
@@ -26,16 +28,18 @@ function validAndSend() {
             let id = temp.indexOf(i)
             if (id == -1) {
                 error.value = true
+                error_text = "Неправельно указан порядок посещения"
                 break;
             }
-            arrayImages.push([images.value[temp.indexOf(i)].image])
+            arrayImages.push(images.value[temp.indexOf(i)].image)
         }
+
         if (images.value.length != arrayImages.length) {
             error.value = true
             error_text = "Неправельно указан порядок посещения"
 
         }
-        else {
+        else if (!error.value) {
             error.value = false
             console.log(arrayImages)
         }
@@ -75,6 +79,9 @@ function validAndSend() {
                     {{ error_text }}
                 </CAlert>
             </div>
+        </div>
+        <div>
+            <ResultItems />
         </div>
     </div>
 </template>

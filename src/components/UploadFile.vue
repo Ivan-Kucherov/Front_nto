@@ -41,7 +41,7 @@ function idChange(event, item) {
 </script>
 
 <template>
-    <div class="row row-cols-5" style="margin-left: auto;">
+    <div class="row row-cols-6" style="margin-left: auto;">
         <div class="col" v-for="item in images" v-bind:key="item">
             <img class="rounded float-none" :src="item.image" @click="console.log(item.id)" />
             <div style="display: flex;
@@ -59,8 +59,8 @@ function idChange(event, item) {
 
 <style scoped>
 img {
-    padding: 0 10px 10px;
-    width: 14rem;
-    height: 14rem;
+    padding: 0 5px 5px;
+    width: 10rem;
+    height: 10rem;
 }
 </style>
