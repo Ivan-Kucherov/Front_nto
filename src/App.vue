@@ -10,7 +10,9 @@ import HeaderItem from './components/HeaderItem.vue'
 
     <HeaderItem />
   </header>
+  <div class="body">
   <RouterView />
+  </div>
 </template>
 
 <style scoped>
@@ -19,9 +21,9 @@ import HeaderItem from './components/HeaderItem.vue'
   margin: 0 auto 2rem;
 }
 
-body {
+.body {
   display: flex;
-  place-items: center;
-  background-color: rgba(109, 255, 141, 0.425);
+  justify-content: center;
+  
 }
 </style>

@@ -1,18 +1,22 @@
-<script setup>
+<script setup lang='ts'>
 
 import { storeToRefs } from "pinia";
-import { ref, toRaw } from "vue"
+import { ref, toRaw, shallowRef } from "vue"
 import UploadFile from "../components/UploadFile.vue"
 import ResultItems from "../components/ResultsItem.vue"
 import { useImagesStore } from "@/stores/ImagesStore";
-import axios from 'axios'
-
+import axios from "axios";
+//Можно использовать для различных преобразований
+//const map = shallowRef < null | YMap > (null);
+//ymaps3.getDefaultConfig().setApikeys('35947662-8410-4e55-974a-a80dbb97c767')
 const store = useImagesStore()
-const { images } = storeToRefs(store)
+const { images, response_images, type } = storeToRefs(store)
 let arrayImages = [];
 const error = ref(false)
 let error_text = "Отсутствуют фотографии"
+
 function validAndSend() {
+    console.log(type.value)
     let temp = [];
     arrayImages = [];
     error.value = false;
@@ -23,12 +27,12 @@ function validAndSend() {
         for (let i = 0; i < images.value.length; i++) {
             temp.push(images.value[i].id)
         }
-        console.log(temp)
+        //console.log(temp)
         for (let i = 0; i < images.value.length; i++) {
             let id = temp.indexOf(i)
             if (id == -1) {
                 error.value = true
-                error_text = "Неправельно указан порядок посещения"
+                error_text = "Неправильно указан порядок посещения"
                 break;
             }
             arrayImages.push(images.value[temp.indexOf(i)].image)
@@ -36,21 +40,21 @@ function validAndSend() {
 
         if (images.value.length != arrayImages.length) {
             error.value = true
-            error_text = "Неправельно указан порядок посещения"
+            error_text = "Неправильно указан порядок посещения"
 
         }
         else if (!error.value) {
             error.value = false
-            console.log(arrayImages)
+            //console.log(arrayImages)
         }
     }
     if (!error.value) {
         axios({
             method: 'post',
             url: '/items',
-            data: { images: arrayImages },
+            data: { images: arrayImages, type: type.value },
         }).then(function (response) {
-            console.log(response);
+            response_images.value = response.data.images
         })
             .catch(function (error) {
                 console.log(error);
@@ -61,14 +65,20 @@ function validAndSend() {
 
 <template>
     <div class="page">
-        <div>
+        <div class="box">
             <span class="text">
-                <h4>Выберете фотаграфии посещенных мест и укажите порпядок их посещения
+                <h4>Выберете фотографии посещенных мест и укажите порядок их посещения
                 </h4>
             </span>
             <UploadFile />
         </div>
         <div class="box">
+            <div style="flex-direction: row;">
+                <CFormCheck type="radio" name="flexRadioDefault" id="flexRadioVModel1" value="Nearest" v-model="type"
+                    inline label="Ближайшие" />
+                <CFormCheck type="radio" name="flexRadioDefault" id="flexRadioVModel2" value="all" v-model="type" inline
+                    label="Все" checked />
+            </div>
             <div>
                 <button type="button" class="btn btn-outline-primary center" @click="validAndSend()">Получить
                     список интересных
@@ -96,6 +106,8 @@ function validAndSend() {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    padding: 5px 10px 20px;
 }
 
 .border_back {
@@ -110,16 +122,13 @@ function validAndSend() {
 }
 
 .text {
-    display: flex;
+
     padding: 5px;
     font: 1em sans-serif;
 
 }
 
 .page {
-    width: auto;
-    height: 100%;
-    padding: 5px;
     border-radius: 10px;
 }
 </style>
